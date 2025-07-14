@@ -1,0 +1,155 @@
+<div class="max-w-4xl mx-auto">
+  <div class="text-center mb-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-4">Assistant Vocal IA</h1>
+    <p class="text-gray-600">Interagissez avec l'IA par la voix pour une expérience mains libres</p>
+  </div>
+
+  <!-- Voice Interface -->
+  <div class="bg-white rounded-xl shadow-sm border p-8 mb-8">
+    <div class="text-center">
+      <!-- Microphone Button -->
+      <div class="relative mb-6">
+        <button
+          (click)="toggleRecording()"
+          [class]="getMicrophoneButtonClass()"
+          [disabled]="!isSupported"
+        >
+          <svg *ngIf="!isRecording" class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
+          </svg>
+          <svg *ngIf="isRecording" class="w-12 h-12" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M6 6h12v12H6z"/>
+          </svg>
+        </button>
+        
+        <!-- Recording Animation -->
+        <div *ngIf="isRecording" class="absolute inset-0 rounded-full border-4 border-red-300 animate-ping"></div>
+        <div *ngIf="isRecording" class="absolute inset-2 rounded-full border-2 border-red-400 animate-pulse"></div>
+      </div>
+
+      <!-- Status Text -->
+      <div class="mb-6">
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ getStatusText() }}</h3>
+        <p class="text-gray-600">{{ getStatusDescription() }}</p>
+      </div>
+
+      <!-- Voice Level Indicator -->
+      <div *ngIf="isRecording" class="mb-6">
+        <div class="flex justify-center items-end space-x-1 h-16">
+          <div *ngFor="let bar of voiceLevelBars" 
+               class="w-2 bg-red-500 rounded-full transition-all duration-150"
+               [style.height.px]="bar"></div>
+        </div>
+      </div>
+
+      <!-- Quick Commands -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <button (click)="executeQuickCommand('weather')" 
+                class="p-4 text-left bg-blue-50 rounded-lg border hover:bg-blue-100 transition-colors">
+          <h4 class="font-semibold text-blue-900">Météo</h4>
+          <p class="text-sm text-blue-700">"Quel temps fait-il ?"</p>
+        </button>
+        <button (click)="executeQuickCommand('time')" 
+                class="p-4 text-left bg-green-50 rounded-lg border hover:bg-green-100 transition-colors">
+          <h4 class="font-semibold text-green-900">Heure</h4>
+          <p class="text-sm text-green-700">"Quelle heure est-il ?"</p>
+        </button>
+        <button (click)="executeQuickCommand('joke')" 
+                class="p-4 text-left bg-purple-50 rounded-lg border hover:bg-purple-100 transition-colors">
+          <h4 class="font-semibold text-purple-900">Blague</h4>
+          <p class="text-sm text-purple-700">"Raconte-moi une blague"</p>
+        </button>
+        <button (click)="executeQuickCommand('help')" 
+                class="p-4 text-left bg-orange-50 rounded-lg border hover:bg-orange-100 transition-colors">
+          <h4 class="font-semibold text-orange-900">Aide</h4>
+          <p class="text-sm text-orange-700">"Comment ça marche ?"</p>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Conversation History -->
+  <div *ngIf="conversations.length > 0" class="bg-white rounded-xl shadow-sm border">
+    <div class="border-b p-4">
+      <h3 class="text-lg font-semibold text-gray-900">Historique des conversations</h3>
+    </div>
+    <div class="p-4 space-y-4 max-h-96 overflow-y-auto">
+      <div *ngFor="let conversation of conversations" class="space-y-2">
+        <!-- User Speech -->
+        <div class="flex justify-end">
+          <div class="bg-blue-600 text-white max-w-xs lg:max-w-md px-4 py-2 rounded-lg">
+            <div class="flex items-center mb-1">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
+              </svg>
+              <span class="text-xs opacity-75">Vous avez dit</span>
+            </div>
+            <p class="text-sm">{{ conversation.userSpeech }}</p>
+            <p class="text-xs mt-1 opacity-75">{{ conversation.timestamp | date:'short' }}</p>
+          </div>
+        </div>
+        
+        <!-- AI Response -->
+        <div class="flex justify-start">
+          <div class="bg-gray-100 text-gray-900 max-w-xs lg:max-w-md px-4 py-2 rounded-lg">
+            <div class="flex items-center mb-1">
+              <svg class="w-4 h-4 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+              </svg>
+              <span class="text-xs text-gray-600">IA répond</span>
+            </div>
+            <p class="text-sm">{{ conversation.aiResponse }}</p>
+            <button *ngIf="conversation.aiResponse" 
+                    (click)="speakText(conversation.aiResponse)"
+                    class="mt-2 text-xs text-blue-600 hover:text-blue-700 flex items-center">
+              <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 14.142M8.586 17.414L12 21l3.414-3.586a2 2 0 000-2.828L12 11.172 8.586 14.586a2 2 0 000 2.828z"/>
+              </svg>
+              Écouter
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Browser Support Warning -->
+  <div *ngIf="!isSupported" class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mt-6">
+    <div class="flex">
+      <svg class="w-5 h-5 text-yellow-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+      </svg>
+      <div>
+        <h3 class="text-sm font-medium text-yellow-800">Navigateur non supporté</h3>
+        <p class="text-sm text-yellow-700 mt-1">
+          Votre navigateur ne supporte pas la reconnaissance vocale. Veuillez utiliser Chrome, Edge ou Safari.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings -->
+  <div class="bg-white rounded-xl shadow-sm border p-6 mt-6">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4">Paramètres vocaux</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Langue de reconnaissance</label>
+        <select [(ngModel)]="recognitionLanguage" 
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500">
+          <option value="fr-FR">Français</option>
+          <option value="en-US">Anglais (US)</option>
+          <option value="en-GB">Anglais (UK)</option>
+          <option value="es-ES">Espagnol</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Voix de synthèse</label>
+        <select [(ngModel)]="speechVoice" 
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500">
+          <option value="female">Voix féminine</option>
+          <option value="male">Voix masculine</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>

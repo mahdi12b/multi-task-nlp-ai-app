@@ -1,0 +1,238 @@
+<div class="max-w-6xl mx-auto">
+  <div class="flex justify-between items-center mb-8">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Historique</h1>
+      <p class="text-gray-600">Retrouvez toutes vos interactions et créations précédentes</p>
+    </div>
+    <div class="flex space-x-3">
+      <button (click)="clearAllHistory()" 
+              class="px-4 py-2 text-red-600 border border-red-300 rounded-lg hover:bg-red-50 transition-colors">
+        Tout effacer
+      </button>
+      <button (click)="exportHistory()" 
+              class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+        Exporter
+      </button>
+    </div>
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="bg-white rounded-xl shadow-sm border mb-6">
+    <div class="border-b">
+      <nav class="flex space-x-8 px-6">
+        <button *ngFor="let tab of filterTabs" 
+                (click)="activeFilter = tab.key"
+                [class]="getTabClass(tab.key)"
+                class="py-4 px-1 border-b-2 font-medium text-sm transition-colors">
+          <div class="flex items-center">
+            <span [innerHTML]="tab.icon" class="w-5 h-5 mr-2"></span>
+            {{ tab.label }}
+            <span class="ml-2 px-2 py-1 text-xs rounded-full" 
+                  [class]="getTabBadgeClass(tab.key)">
+              {{ getItemCount(tab.key) }}
+            </span>
+          </div>
+        </button>
+      </nav>
+    </div>
+
+    <!-- Search and Date Filter -->
+    <div class="p-6 border-b">
+      <div class="flex flex-col md:flex-row gap-4">
+        <div class="flex-1">
+          <input
+            type="text"
+            [(ngModel)]="searchQuery"
+            (input)="filterHistory()"
+            placeholder="Rechercher dans l'historique..."
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+        </div>
+        <div class="flex gap-2">
+          <select [(ngModel)]="dateFilter" (change)="filterHistory()" 
+                  class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+            <option value="all">Toutes les dates</option>
+            <option value="today">Aujourd'hui</option>
+            <option value="week">Cette semaine</option>
+            <option value="month">Ce mois</option>
+          </select>
+          <select [(ngModel)]="sortOrder" (change)="filterHistory()" 
+                  class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+            <option value="newest">Plus récent</option>
+            <option value="oldest">Plus ancien</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- History Content -->
+  <div class="space-y-6">
+    <!-- Chat History -->
+    <div *ngIf="activeFilter === 'all' || activeFilter === 'chat'">
+      <h2 *ngIf="activeFilter === 'all'" class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+        <svg class="w-6 h-6 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+        </svg>
+        Conversations Chat
+      </h2>
+      
+      <div class="grid gap-4">
+        <div *ngFor="let chat of filteredChatHistory" 
+             class="bg-white rounded-lg border p-4 hover:shadow-md transition-shadow">
+          <div class="flex justify-between items-start mb-3">
+            <div class="flex items-center">
+              <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-medium text-gray-900">{{ chat.content.substring(0, 50) }}...</h3>
+                <p class="text-sm text-gray-500">{{ chat.timestamp | date:'medium' }}</p>
+              </div>
+            </div>
+            <div class="flex space-x-2">
+              <button (click)="viewChatDetail(chat)" 
+                      class="text-blue-600 hover:text-blue-700 text-sm">
+                Voir
+              </button>
+              <button (click)="deleteChatItem(chat.id)" 
+                      class="text-red-600 hover:text-red-700 text-sm">
+                Supprimer
+              </button>
+            </div>
+          </div>
+          <p class="text-gray-600 text-sm">{{ chat.content }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Images History -->
+    <div *ngIf="activeFilter === 'all' || activeFilter === 'images'">
+      <h2 *ngIf="activeFilter === 'all'" class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+        <svg class="w-6 h-6 text-purple-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+        </svg>
+        Images générées
+      </h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div *ngFor="let image of filteredImageHistory" 
+             class="bg-white rounded-lg border overflow-hidden hover:shadow-md transition-shadow">
+          <div class="aspect-square bg-gray-100">
+            <img [src]="image.imageUrl" [alt]="image.prompt" 
+                 class="w-full h-full object-cover"
+                 (error)="onImageError($event)">
+          </div>
+          <div class="p-4">
+            <p class="text-sm text-gray-600 mb-2">{{ image.prompt }}</p>
+            <p class="text-xs text-gray-400 mb-3">{{ image.timestamp | date:'medium' }}</p>
+            <div class="flex space-x-2">
+              <button (click)="downloadImage(image)" 
+                      class="flex-1 bg-purple-600 text-white py-1 px-3 rounded text-sm hover:bg-purple-700 transition-colors">
+                Télécharger
+              </button>
+              <button (click)="deleteImageItem(image.id)" 
+                      class="flex-1 bg-red-600 text-white py-1 px-3 rounded text-sm hover:bg-red-700 transition-colors">
+                Supprimer
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Voice History -->
+    <div *ngIf="activeFilter === 'all' || activeFilter === 'voice'">
+      <h2 *ngIf="activeFilter === 'all'" class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+        <svg class="w-6 h-6 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
+        </svg>
+        Conversations vocales
+      </h2>
+      
+      <div class="grid gap-4">
+        <div *ngFor="let voice of filteredVoiceHistory" 
+             class="bg-white rounded-lg border p-4 hover:shadow-md transition-shadow">
+          <div class="flex justify-between items-start mb-3">
+            <div class="flex items-center">
+              <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mr-3">
+                <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-medium text-gray-900">{{ voice.userSpeech.substring(0, 50) }}...</h3>
+                <p class="text-sm text-gray-500">{{ voice.timestamp | date:'medium' }}</p>
+              </div>
+            </div>
+            <div class="flex space-x-2">
+              <button (click)="playVoiceResponse(voice.aiResponse)" 
+                      class="text-red-600 hover:text-red-700 text-sm">
+                Écouter
+              </button>
+              <button (click)="deleteVoiceItem(voice.id)" 
+                      class="text-red-600 hover:text-red-700 text-sm">
+                Supprimer
+              </button>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <p class="text-sm"><strong>Vous :</strong> {{ voice.userSpeech }}</p>
+            <p class="text-sm"><strong>IA :</strong> {{ voice.aiResponse }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Text Analysis History -->
+    <div *ngIf="activeFilter === 'all' || activeFilter === 'analysis'">
+      <h2 *ngIf="activeFilter === 'all'" class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+        <svg class="w-6 h-6 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+        Analyses de texte
+      </h2>
+      
+      <div class="grid gap-4">
+        <div *ngFor="let analysis of filteredAnalysisHistory" 
+             class="bg-white rounded-lg border p-4 hover:shadow-md transition-shadow">
+          <div class="flex justify-between items-start mb-3">
+            <div class="flex items-center">
+              <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-medium text-gray-900">Analyse {{ analysis.analysisType }}</h3>
+                <p class="text-sm text-gray-500">{{ analysis.timestamp | date:'medium' }}</p>
+              </div>
+            </div>
+            <div class="flex space-x-2">
+              <button (click)="viewAnalysisDetail(analysis)" 
+                      class="text-green-600 hover:text-green-700 text-sm">
+                Voir
+              </button>
+              <button (click)="deleteAnalysisItem(analysis.id)" 
+                      class="text-red-600 hover:text-red-700 text-sm">
+                Supprimer
+              </button>
+            </div>
+          </div>
+          <p class="text-gray-600 text-sm">{{ analysis.text.substring(0, 100) }}...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="isHistoryEmpty()" class="text-center py-12">
+    <svg class="w-24 h-24 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+    </svg>
+    <h3 class="text-xl font-semibold text-gray-900 mb-2">Aucun historique</h3>
+    <p class="text-gray-600">Commencez à utiliser l'application pour voir votre historique ici</p>
+  </div>
+</div>

@@ -1,0 +1,113 @@
+/* Styles pour l'analyse de texte */
+.analysis-form {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+}
+
+.analyze-button {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transition: all 0.3s ease;
+}
+
+.analyze-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(5, 150, 105, 0.4);
+}
+
+.result-card {
+  transition: all 0.3s ease;
+  border-left: 4px solid transparent;
+}
+
+.result-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.sentiment-card {
+  border-left-color: #10b981;
+}
+
+.summary-card {
+  border-left-color: #3b82f6;
+}
+
+.keywords-card {
+  border-left-color: #8b5cf6;
+}
+
+.entities-card {
+  border-left-color: #f59e0b;
+}
+
+/* Animations pour les résultats */
+.result-enter {
+  animation: slideInUp 0.5s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Barre de progression pour le sentiment */
+.sentiment-bar {
+  transition: width 1s ease-in-out;
+}
+
+/* Styles pour les badges */
+.keyword-badge {
+  transition: all 0.2s ease;
+}
+
+.keyword-badge:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+}
+
+.entity-badge {
+  transition: all 0.2s ease;
+}
+
+.entity-badge:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .analysis-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .sentiment-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Loading animation */
+.analysis-loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.analysis-loading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}

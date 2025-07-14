@@ -1,0 +1,189 @@
+<div class="rag-web-container">
+  <!-- Header -->
+  <div class="rag-header">
+    <div class="header-content">
+      <h1>RAG - Web Scraping</h1>
+      <p>Analysez le contenu de sites web avec l'IA</p>
+    </div>
+  </div>
+
+  <div class="rag-content">
+    <!-- URL Input Section -->
+    <div class="url-section">
+      <div class="url-card">
+        <h3>Ajouter des URLs</h3>
+        
+        <div class="url-input-group">
+          <div class="input-wrapper">
+            <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9 3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
+            </svg>
+            <input 
+              type="url" 
+              [(ngModel)]="newUrl" 
+              placeholder="https://example.com"
+              class="url-input"
+              (keyup.enter)="addUrl()">
+          </div>
+          <button class="add-btn" (click)="addUrl()" [disabled]="!newUrl.trim()">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+            </svg>
+            Ajouter
+          </button>
+        </div>
+
+        <!-- URLs List -->
+        <div class="urls-list" *ngIf="webUrls.length > 0">
+          <h4>URLs ajoutées ({{ webUrls.length }})</h4>
+          <div *ngFor="let url of webUrls" class="url-item">
+            <div class="url-status" [class]="url.status">
+              <svg *ngIf="url.status === 'success'" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+              <svg *ngIf="url.status === 'error'" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+              <div *ngIf="url.status === 'loading'" class="loading-dot"></div>
+            </div>
+            
+            <div class="url-info">
+              <div class="url-title">{{ url.title || 'Chargement...' }}</div>
+              <div class="url-link">{{ url.url }}</div>
+              <div class="url-meta" *ngIf="url.wordCount">{{ url.wordCount }} mots • {{ url.scrapedAt | date:'short' }}</div>
+            </div>
+            
+            <button class="remove-btn" (click)="removeUrl(url)">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Bulk URL Input -->
+        <div class="bulk-input-section">
+          <button class="bulk-toggle" (click)="showBulkInput = !showBulkInput">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+            </svg>
+            Ajouter plusieurs URLs
+          </button>
+          
+          <div class="bulk-input" *ngIf="showBulkInput">
+            <textarea 
+              [(ngModel)]="bulkUrls"
+              placeholder="Collez plusieurs URLs (une par ligne)&#10;https://example1.com&#10;https://example2.com&#10;https://example3.com"
+              class="bulk-textarea"
+              rows="4"></textarea>
+            <button class="bulk-add-btn" (click)="addBulkUrls()" [disabled]="!bulkUrls.trim()">
+              Ajouter toutes les URLs
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Section -->
+    <div class="chat-section">
+      <div class="chat-card">
+        <div class="chat-header">
+          <h3>Assistant Web</h3>
+          <div class="web-stats">
+            <div class="stat">
+              <span class="stat-number">{{ getSuccessfulUrls().length }}</span>
+              <span class="stat-label">Sites analysés</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number">{{ getTotalWords() }}</span>
+              <span class="stat-label">Mots extraits</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Messages -->
+        <div class="chat-messages" #chatMessages>
+          <div class="welcome-message" *ngIf="messages.length === 0">
+            <div class="welcome-content">
+              <svg class="welcome-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9 3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
+              </svg>
+              <h4>Analyseur Web IA</h4>
+              <p>Ajoutez des URLs et posez des questions sur leur contenu. Je peux résumer, analyser et extraire des informations de n'importe quel site web.</p>
+            </div>
+          </div>
+
+         <div *ngFor="let message of messages" class="message" [class]="message.type">
+  <div class="message-content">
+    
+    <!-- Contenu du message -->
+    <div class="message-text" [innerHTML]="message.content"></div>
+
+    <!-- Affichage des sources -->
+    <div class="message-sources" *ngIf="message.sources && message.sources.length > 0">
+      <div class="sources-header">Sources :</div>
+      <div class="sources-list">
+        <a *ngFor="let source of message.sources" 
+           [href]="source.url" 
+           target="_blank" 
+           rel="noopener noreferrer"
+           class="source-link">
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+          </svg>
+          {{ source.title }}
+        </a>
+      </div>
+    </div>
+
+    <!-- Timestamp -->
+    <div class="message-time">{{ message.timestamp | date:'short' }}</div>
+
+  </div>
+</div>
+
+          
+          <div *ngIf="isLoading" class="message assistant">
+            <div class="message-content loading">
+              <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <span>Analyse du contenu web en cours...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Input -->
+        <div class="chat-input-container">
+          <div class="input-wrapper">
+            <textarea 
+              [(ngModel)]="currentMessage"
+              placeholder="Résumez le contenu de ces sites, trouvez les points communs..."
+              class="chat-input"
+              rows="1"
+              [disabled]="getSuccessfulUrls().length === 0"
+              (keydown)="onKeyDown($event)"></textarea>
+            <button 
+              class="send-btn" 
+              (click)="sendMessage()"
+              [disabled]="!currentMessage.trim() || getSuccessfulUrls().length === 0 || isLoading">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+              </svg>
+            </button>
+          </div>
+          
+          <!-- Suggestions -->
+          <div class="suggestions" *ngIf="getSuccessfulUrls().length > 0 && messages.length === 0">
+            <button *ngFor="let suggestion of webSuggestions" 
+                    class="suggestion-btn"
+                    (click)="selectSuggestion(suggestion)">
+              {{ suggestion }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

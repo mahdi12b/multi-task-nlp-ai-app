@@ -1,0 +1,21 @@
+# Dossier node_modules du frontend Angular
+node_modules/
+dist/
+
+# Fichiers Python/FastAPI (virtual env, etc.)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+*.env
+
+# Fichiers système
+.DS_Store
+*.log
+
+# Fichiers générés
+*.zip
+*.tar.gz

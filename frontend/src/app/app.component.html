@@ -1,0 +1,25 @@
+<div class="app-layout">
+  <app-sidebar 
+    [class.mobile-open]="mobileSidebarOpen"
+    (sidebarToggle)="onSidebarToggle($event)">
+  </app-sidebar>
+  
+  <div class="main-layout" [class.sidebar-collapsed]="sidebarCollapsed">
+    <app-header 
+      [sidebarCollapsed]="sidebarCollapsed"
+      (mobileSidebarToggle)="toggleMobileSidebar()">
+    </app-header>
+    
+    <main class="main-content">
+      <div class="content-wrapper">
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+  </div>
+  
+  <!-- Overlay pour mobile -->
+  <div class="mobile-overlay" 
+       [class.show]="mobileSidebarOpen" 
+       (click)="closeMobileSidebar()">
+  </div>
+</div>

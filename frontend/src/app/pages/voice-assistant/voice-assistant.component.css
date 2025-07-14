@@ -1,0 +1,187 @@
+/* Styles pour l'assistant vocal */
+.microphone-button {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.microphone-idle {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3);
+}
+
+.microphone-idle:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 8px 30px rgba(239, 68, 68, 0.4);
+}
+
+.microphone-recording {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  color: white;
+  animation: pulse 2s infinite;
+  box-shadow: 0 0 30px rgba(220, 38, 38, 0.6);
+}
+
+.microphone-disabled {
+  background: #d1d5db;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 20px rgba(220, 38, 38, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+  }
+}
+
+/* Animation pour les barres de niveau vocal */
+.voice-bar {
+  animation: voiceLevel 0.5s ease-in-out infinite alternate;
+}
+
+.voice-bar:nth-child(1) { animation-delay: 0s; }
+.voice-bar:nth-child(2) { animation-delay: 0.1s; }
+.voice-bar:nth-child(3) { animation-delay: 0.2s; }
+.voice-bar:nth-child(4) { animation-delay: 0.3s; }
+.voice-bar:nth-child(5) { animation-delay: 0.4s; }
+.voice-bar:nth-child(6) { animation-delay: 0.3s; }
+.voice-bar:nth-child(7) { animation-delay: 0.2s; }
+.voice-bar:nth-child(8) { animation-delay: 0.1s; }
+
+@keyframes voiceLevel {
+  0% { height: 8px; }
+  100% { height: 64px; }
+}
+
+/* Styles pour les commandes rapides */
+.quick-command {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.quick-command:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles pour l'historique des conversations */
+.conversation-item {
+  animation: slideInUp 0.3s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.user-message {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+.ai-message {
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+}
+
+/* Indicateur de statut */
+.status-indicator {
+  position: relative;
+}
+
+.status-indicator::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #10b981;
+  animation: statusBlink 2s infinite;
+}
+
+@keyframes statusBlink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0.3; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .microphone-button {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .quick-commands-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .settings-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Scrollbar personnalisée pour l'historique */
+.conversation-history::-webkit-scrollbar {
+  width: 6px;
+}
+
+.conversation-history::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.conversation-history::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.conversation-history::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Animation pour les messages */
+.message-enter {
+  animation: messageSlideIn 0.3s ease-out;
+}
+
+@keyframes messageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Styles pour les boutons d'écoute */
+.listen-button {
+  transition: all 0.2s ease;
+}
+
+.listen-button:hover {
+  transform: scale(1.05);
+}

@@ -1,0 +1,84 @@
+.app-layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.main-layout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 280px;
+  transition: margin-left 0.3s ease;
+}
+
+.main-layout.sidebar-collapsed {
+  margin-left: 80px;
+}
+
+.main-content {
+  flex: 1;
+  margin-top: 70px;
+  overflow-y: auto;
+  background: #f9fafb;
+}
+
+.content-wrapper {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.mobile-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.mobile-overlay.show {
+  opacity: 1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .main-layout {
+    margin-left: 0;
+  }
+  
+  .main-layout.sidebar-collapsed {
+    margin-left: 0;
+  }
+  
+  .mobile-overlay {
+    display: block;
+  }
+  
+  .content-wrapper {
+    padding: 1rem;
+  }
+}
+
+/* Scrollbar personnalisée pour le contenu principal */
+.main-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.main-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.main-content::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.main-content::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}

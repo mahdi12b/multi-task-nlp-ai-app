@@ -1,0 +1,265 @@
+<div class="ner-container">
+  <!-- Header -->
+  <div class="ner-header">
+    <div class="header-content">
+      <h1>NER - Reconnaissance d'Entités</h1>
+      <p>Identifiez et extrayez automatiquement les entités nommées (personnes, lieux, organisations, dates...) de vos textes</p>
+    </div>
+  </div>
+
+  <div class="ner-content">
+    <!-- Input Section -->
+    <div class="input-section">
+      <div class="input-card">
+        <div class="card-header">
+          <h3>Texte à analyser</h3>
+          <div class="text-stats">
+            <span class="stat">{{ getWordCount() }} mots</span>
+            <span class="stat">{{ getCharCount() }} caractères</span>
+          </div>
+        </div>
+
+        <!-- Text Input Area -->
+        <div class="text-input-wrapper">
+          <textarea 
+            [(ngModel)]="inputText"
+            placeholder="Collez ou tapez votre texte ici pour identifier les entités nommées...
+
+Exemple : 'Apple Inc. a été fondée par Steve Jobs à Cupertino en 1976. La société est maintenant dirigée par Tim Cook et emploie plus de 150 000 personnes dans le monde.'"
+            class="text-input"
+            rows="8"
+            [class.has-content]="inputText.length > 0"></textarea>
+          
+          <div class="input-actions">
+            <button class="clear-btn" (click)="clearText()" [disabled]="!inputText.trim()">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+              </svg>
+              Effacer
+            </button>
+            
+            <button class="paste-btn" (click)="pasteFromClipboard()">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+              </svg>
+              Coller
+            </button>
+          </div>
+        </div>
+
+        <!-- Entity Types Configuration -->
+        <div class="config-section">
+          <h4>Types d'entités à détecter</h4>
+          
+          <div class="entity-types-grid">
+            <label *ngFor="let entityType of entityTypes" 
+                   class="entity-type-checkbox"
+                   [class.checked]="entityType.enabled">
+              <input type="checkbox" [(ngModel)]="entityType.enabled">
+              <div class="checkbox-custom" [style.border-color]="entityType.color">
+                <div class="checkbox-icon" [style.background-color]="entityType.color">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="entity-type-info">
+                <span class="entity-name">{{ entityType.name }}</span>
+                <span class="entity-description">{{ entityType.description }}</span>
+              </div>
+            </label>
+          </div>
+
+          <!-- Language Selection -->
+          <div class="language-section">
+            <label class="option-label">
+              <span>Langue du texte</span>
+              <div class="label-decoration"></div>
+            </label>
+            <select [(ngModel)]="selectedLanguage" class="language-select">
+              <option value="fr">Français</option>
+              <option value="en">Anglais</option>
+              <option value="es">Espagnol</option>
+              <option value="de">Allemand</option>
+              <option value="it">Italien</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Analyze Button -->
+        <div class="action-section">
+          <button 
+            class="analyze-btn" 
+            (click)="analyzeText()" 
+            [disabled]="!inputText.trim() || isLoading || !hasEnabledEntityTypes()">
+            <div class="btn-content">
+              <div class="btn-icon" [class.spinning]="isLoading">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                </svg>
+              </div>
+              <span>{{ isLoading ? 'Analyse en cours...' : 'Analyser les entités' }}</span>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <div class="results-section">
+      <!-- Annotated Text Display -->
+      <div class="annotated-card">
+        <div class="card-header">
+          <h3>Texte annoté</h3>
+          <div class="annotation-stats" *ngIf="annotatedText">
+            <span class="stat">{{ getTotalEntities() }} entités</span>
+            <span class="stat">{{ getUniqueEntityTypes() }} types</span>
+          </div>
+        </div>
+
+        <div class="annotated-display">
+          <div *ngIf="!annotatedText && !isLoading" class="empty-state">
+            <div class="empty-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+              </svg>
+            </div>
+            <h4>Votre texte annoté apparaîtra ici</h4>
+            <p>Ajoutez du texte et cliquez sur "Analyser les entités" pour voir les résultats</p>
+          </div>
+
+          <div *ngIf="isLoading" class="loading-state">
+            <div class="loading-animation">
+              <div class="loading-dots">
+                <span></span><span></span><span></span>
+              </div>
+            </div>
+            <p>Analyse des entités nommées en cours...</p>
+          </div>
+
+          <div *ngIf="annotatedText && !isLoading" class="annotated-text" [innerHTML]="annotatedText"></div>
+        </div>
+
+        <!-- Legend -->
+        <div class="legend-section" *ngIf="annotatedText">
+          <h5>Légende des entités</h5>
+          <div class="legend-items">
+            <div *ngFor="let type of getActiveEntityTypes()" class="legend-item">
+              <div class="legend-color" [style.background-color]="type.color"></div>
+              <span class="legend-label">{{ type.name }}</span>
+              <span class="legend-count">({{ getEntityCount(type.id) }})</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Entities List -->
+      <div class="entities-card">
+        <div class="card-header">
+          <h3>Entités détectées</h3>
+          <div class="filter-controls" *ngIf="entities.length > 0">
+            <select [(ngModel)]="entityFilter" class="filter-select">
+              <option value="all">Tous les types</option>
+              <option *ngFor="let type of getActiveEntityTypes()" [value]="type.id">{{ type.name }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="entities-display">
+          <div *ngIf="entities.length === 0 && !isLoading" class="empty-entities">
+            <div class="empty-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+              </svg>
+            </div>
+            <h4>Aucune entité détectée</h4>
+            <p>Les entités trouvées apparaîtront ici après l'analyse</p>
+          </div>
+
+          <div *ngIf="isLoading" class="loading-state">
+            <div class="loading-animation">
+              <div class="loading-dots">
+                <span></span><span></span><span></span>
+              </div>
+            </div>
+            <p>Extraction des entités...</p>
+          </div>
+
+          <div *ngIf="entities.length > 0 && !isLoading" class="entities-list">
+            <div *ngFor="let entity of getFilteredEntities()" 
+                 class="entity-item"
+                 [style.border-left-color]="getEntityTypeColor(entity.type)">
+              <div class="entity-header">
+                <span class="entity-text">{{ entity.text }}</span>
+                <span class="entity-type" 
+                      [style.background-color]="getEntityTypeColor(entity.type)"
+                      [style.color]="'white'">
+                  {{ getEntityTypeName(entity.type) }}
+                </span>
+              </div>
+              <div class="entity-details">
+                <span>Position: {{ entity.start }}-{{ entity.end }}</span>
+                <span>Confiance: {{ (entity.confidence * 100).toFixed(1) }}%</span>
+                <span *ngIf="entity.context">Contexte: "{{ entity.context }}"</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Export Actions -->
+        <div class="export-actions" *ngIf="entities.length > 0">
+          <button class="export-btn json-btn" (click)="exportAsJSON()">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            Export JSON
+          </button>
+          
+          <button class="export-btn csv-btn" (click)="exportAsCSV()">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            Export CSV
+          </button>
+          
+          <button class="export-btn copy-btn" (click)="copyEntities()">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+            </svg>
+            Copier
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Examples Section -->
+  <div class="examples-section" *ngIf="!inputText.trim()">
+    <div class="examples-card">
+      <h4>Exemples de textes pour l'analyse NER</h4>
+      <div class="examples-grid">
+        <button *ngFor="let example of examples" 
+                class="example-btn"
+                (click)="loadExample(example)">
+          <div class="example-icon" [class]="example.iconClass">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="example.iconPath"/>
+            </svg>
+          </div>
+          <div class="example-content">
+            <h5>{{ example.title }}</h5>
+            <p>{{ example.description }}</p>
+            <div class="example-entities">
+              <span *ngFor="let entityType of example.expectedEntities" 
+                    class="entity-preview"
+                    [style.background-color]="getEntityTypeColor(entityType)"
+                    [style.color]="'white'">
+                {{ getEntityTypeName(entityType) }}
+              </span>
+            </div>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

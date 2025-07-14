@@ -1,0 +1,7 @@
+🧠 Résumé très simplifié juste lors de l execution de l app avec  uvicorn main:app --reload :
+Ordre	Étape	Action interne
+1	uvicorn main:app	Charge et exécute main.py
+2	import routes...	Exécute les fichiers de routes
+3	import services...	Exécute les fichiers services
+4	summarizer = get_summarizer()	Le modèle est chargé ici
+5	App prêt à recevoir des requêtes	🚀

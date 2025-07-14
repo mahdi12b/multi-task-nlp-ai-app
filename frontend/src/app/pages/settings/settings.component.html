@@ -1,0 +1,306 @@
+<div class="max-w-4xl mx-auto">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Paramètres</h1>
+    <p class="text-gray-600">Personnalisez votre expérience et configurez vos préférences IA</p>
+  </div>
+
+  <form [formGroup]="settingsForm" (ngSubmit)="saveSettings()">
+    <!-- General Settings -->
+    <div class="bg-white rounded-xl shadow-sm border mb-6">
+      <div class="border-b p-6">
+        <h2 class="text-xl font-semibold text-gray-900 flex items-center">
+          <svg class="w-6 h-6 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+          Paramètres généraux
+        </h2>
+      </div>
+      <div class="p-6 space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Langue de l'interface</label>
+            <select formControlName="language" 
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+              <option value="fr">Français</option>
+              <option value="en">English</option>
+              <option value="es">Español</option>
+              <option value="de">Deutsch</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Thème</label>
+            <select formControlName="theme" 
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+              <option value="light">Clair</option>
+              <option value="dark">Sombre</option>
+              <option value="auto">Automatique</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-sm font-medium text-gray-900">Notifications</h3>
+              <p class="text-sm text-gray-500">Recevoir des notifications pour les nouvelles fonctionnalités</p>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" formControlName="notifications" class="sr-only peer">
+              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+            </label>
+          </div>
+          
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-sm font-medium text-gray-900">Sauvegarde automatique</h3>
+              <p class="text-sm text-gray-500">Sauvegarder automatiquement vos conversations</p>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" formControlName="autoSave" class="sr-only peer">
+              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+            </label>
+          </div>
+          
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-sm font-medium text-gray-900">Sidebar réduite par défaut</h3>
+              <p class="text-sm text-gray-500">Démarrer avec la sidebar réduite</p>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" formControlName="sidebarCollapsed" class="sr-only peer">
+              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Settings -->
+    <div class="bg-white rounded-xl shadow-sm border mb-6">
+      <div class="border-b p-6">
+        <h2 class="text-xl font-semibold text-gray-900 flex items-center">
+          <svg class="w-6 h-6 text-purple-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+          </svg>
+          Paramètres IA
+        </h2>
+      </div>
+      <div class="p-6 space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Modèle de chat par défaut</label>
+            <select formControlName="defaultChatModel" 
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+              <option value="gpt-4">GPT-4 (Recommandé)</option>
+              <option value="gpt-3.5">GPT-3.5 Turbo</option>
+              <option value="claude">Claude</option>
+              <option value="gemini">Gemini</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Créativité des réponses</label>
+            <select formControlName="creativity" 
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+              <option value="conservative">Conservateur</option>
+              <option value="balanced">Équilibré</option>
+              <option value="creative">Créatif</option>
+            </select>
+          </div>
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Longueur des réponses
+            <span class="text-gray-500">({{ getResponseLengthLabel() }})</span>
+          </label>
+          <input type="range" 
+                 formControlName="responseLength" 
+                 min="1" max="3" step="1"
+                 class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider">
+          <div class="flex justify-between text-xs text-gray-500 mt-1">
+            <span>Courte</span>
+            <span>Moyenne</span>
+            <span>Détaillée</span>
+          </div>
+        </div>
+        
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-sm font-medium text-gray-900">Suggestions automatiques</h3>
+              <p class="text-sm text-gray-500">Proposer des questions de suivi</p>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" formControlName="autoSuggestions" class="sr-only peer">
+              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+            </label>
+          </div>
+          
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-sm font-medium text-gray-900">Mode développeur</h3>
+              <p class="text-sm text-gray-500">Afficher les détails techniques des réponses</p>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" formControlName="developerMode" class="sr-only peer">
+              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Privacy & Security -->
+    <div class="bg-white rounded-xl shadow-sm border mb-6">
+      <div class="border-b p-6">
+        <h2 class="text-xl font-semibold text-gray-900 flex items-center">
+          <svg class="w-6 h-6 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+          </svg>
+          Confidentialité et sécurité
+        </h2>
+      </div>
+      <div class="p-6 space-y-6">
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-sm font-medium text-gray-900">Collecte de données d'usage</h3>
+              <p class="text-sm text-gray-500">Aider à améliorer l'application</p>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" formControlName="dataCollection" class="sr-only peer">
+              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+            </label>
+          </div>
+          
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-sm font-medium text-gray-900">Chiffrement local</h3>
+              <p class="text-sm text-gray-500">Chiffrer les données stockées localement</p>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" formControlName="localEncryption" class="sr-only peer">
+              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+            </label>
+          </div>
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Durée de conservation des données (jours)
+          </label>
+          <input type="number" 
+                 formControlName="dataRetentionDays" 
+                 min="1" max="365"
+                 class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+          <p class="text-xs text-gray-500 mt-1">Les données seront automatiquement supprimées après cette période</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Advanced Settings -->
+    <div class="bg-white rounded-xl shadow-sm border mb-6">
+      <div class="border-b p-6">
+        <h2 class="text-xl font-semibold text-gray-900 flex items-center">
+          <svg class="w-6 h-6 text-orange-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"/>
+          </svg>
+          Paramètres avancés
+        </h2>
+      </div>
+      <div class="p-6 space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Limite de tokens par requête</label>
+            <input type="number" 
+                   formControlName="maxTokens" 
+                   min="100" max="4000"
+                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Timeout des requêtes (secondes)</label>
+            <input type="number" 
+                   formControlName="requestTimeout" 
+                   min="5" max="120"
+                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500">
+          </div>
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">API personnalisée</label>
+          <input type="url" 
+                 formControlName="customApiUrl" 
+                 placeholder="https://api.example.com"
+                 class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500">
+          <p class="text-xs text-gray-500 mt-1">Laisser vide pour utiliser l'API par défaut</p>
+        </div>
+        
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-sm font-medium text-gray-900">Mode debug</h3>
+              <p class="text-sm text-gray-500">Afficher les logs détaillés dans la console</p>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" formControlName="debugMode" class="sr-only peer">
+              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+            </label>
+          </div>
+          
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-sm font-medium text-gray-900">Fonctionnalités expérimentales</h3>
+              <p class="text-sm text-gray-500">Activer les nouvelles fonctionnalités en test</p>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" formControlName="experimentalFeatures" class="sr-only peer">
+              <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex justify-between items-center">
+      <div class="space-x-3">
+        <button type="button" (click)="resetToDefaults()" 
+                class="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+          Réinitialiser
+        </button>
+        <button type="button" (click)="exportSettings()" 
+                class="px-4 py-2 text-blue-600 border border-blue-300 rounded-lg hover:bg-blue-50 transition-colors">
+          Exporter
+        </button>
+        <button type="button" (click)="importSettings()" 
+                class="px-4 py-2 text-green-600 border border-green-300 rounded-lg hover:bg-green-50 transition-colors">
+          Importer
+        </button>
+      </div>
+      
+      <div class="space-x-3">
+        <button type="button" (click)="cancelChanges()" 
+                class="px-6 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+          Annuler
+        </button>
+        <button type="submit" 
+                [disabled]="settingsForm.invalid"
+                class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+          Sauvegarder
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Success Message -->
+  <div *ngIf="showSuccessMessage" 
+       class="fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transition-all duration-300">
+    <div class="flex items-center">
+      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+      </svg>
+      Paramètres sauvegardés avec succès !
+    </div>
+  </div>
+</div>

@@ -1,0 +1,266 @@
+<div class="text-summarizer-container">
+  <!-- Header -->
+  <div class="summarizer-header">
+    <div class="header-content">
+      <h1>Text Summarizer IA</h1>
+      <p>Résumez vos textes longs en quelques secondes avec l'intelligence artificielle</p>
+    </div>
+  </div>
+
+  <div class="summarizer-content">
+    <!-- Input Section -->
+    <div class="input-section">
+      <div class="input-card">
+        <div class="card-header">
+          <h3>Texte à résumer</h3>
+          <div class="text-stats">
+            <span class="stat">{{ getWordCount() }} mots</span>
+            <!-- <span class="stat">{{ getCharCount() }} caractères</span> -->
+          </div>
+        </div>
+
+        <!-- Text Input Area -->
+        <div class="text-input-wrapper">
+          <textarea 
+            [(ngModel)]="inputText"
+            placeholder="Collez ou tapez votre texte ici... 
+
+Exemple : Un long article, un rapport, un document académique, etc."
+            class="text-input"
+            rows="12"
+            [class.has-content]="inputText.length > 0"></textarea>
+          
+          <div class="input-actions">
+            <button class="clear-btn" (click)="clearText()" [disabled]="!inputText.trim()">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+              </svg>
+              Effacer
+            </button>
+            
+            <button class="paste-btn" (click)="pasteFromClipboard()">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+              </svg>
+              Coller
+            </button>
+          </div>
+        </div>
+
+        <!-- Options -->
+        <div class="options-section">
+          <h4>Options de résumé</h4>
+          
+          <div class="options-grid">
+            <div class="option-group">
+              <label class="option-label">
+                <span>Longueur du résumé</span>
+                <div class="label-decoration"></div>
+              </label>
+              <select [(ngModel)]="summaryOptions.length" class="option-select">
+                <option value="short">Court (25% du texte original)</option>
+                <option value="medium">Moyen (50% du texte original)</option>
+                <option value="long">Long (75% du texte original)</option>
+              </select>
+            </div>
+
+            <div class="option-group">
+              <label class="option-label">
+                <span>Type de résumé</span>
+                <div class="label-decoration"></div>
+              </label>
+              <select [(ngModel)]="summaryOptions.type" class="option-select">
+                <option value="extractive">Extractif (phrases clés)</option>
+                <option value="abstractive">Abstractif (reformulation)</option>
+                <option value="bullet">Points clés</option>
+              </select>
+            </div>
+
+            <div class="option-group">
+              <label class="option-label">
+                <span>Langue</span>
+                <div class="label-decoration"></div>
+              </label>
+              <select [(ngModel)]="summaryOptions.language" class="option-select">
+                <option value="fr">Français</option>
+                <option value="en">Anglais</option>
+                <option value="es">Espagnol</option>
+                <option value="de">Allemand</option>
+              </select>
+            </div>
+
+            <div class="option-group">
+              <label class="option-label">
+                <span>Focus</span>
+                <div class="label-decoration"></div>
+              </label>
+              <select [(ngModel)]="summaryOptions.focus" class="option-select">
+                <option value="general">Général</option>
+                <option value="key-points">Points principaux</option>
+                <option value="conclusions">Conclusions</option>
+                <option value="facts">Faits importants</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Advanced Options -->
+          <div class="advanced-options" [class.expanded]="showAdvancedOptions">
+            <button class="toggle-advanced" (click)="showAdvancedOptions = !showAdvancedOptions">
+              <svg class="w-4 h-4 transition-transform" [class.rotate-180]="showAdvancedOptions" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+              Options avancées
+            </button>
+
+            <div class="advanced-content" *ngIf="showAdvancedOptions">
+              <div class="checkbox-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" [(ngModel)]="summaryOptions.preserveStructure">
+                  <span class="checkmark"></span>
+                  <span>Préserver la structure du texte</span>
+                </label>
+                
+                <label class="checkbox-label">
+                  <input type="checkbox" [(ngModel)]="summaryOptions.includeKeywords">
+                  <span class="checkmark"></span>
+                  <span>Inclure les mots-clés importants</span>
+                </label>
+                
+                <label class="checkbox-label">
+                  <input type="checkbox" [(ngModel)]="summaryOptions.addReadingTime">
+                  <span class="checkmark"></span>
+                  <span>Ajouter le temps de lecture estimé</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Summarize Button -->
+        <div class="action-section">
+          <button 
+            class="summarize-btn" 
+            (click)="summarizeText()" 
+            [disabled]="!inputText.trim() || isLoading">
+            <div class="btn-content">
+              <div class="btn-icon" [class.spinning]="isLoading">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+              </div>
+              <span>{{ isLoading ? 'Résumé en cours...' : 'Générer le résumé' }}</span>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Output Section -->
+    <div class="output-section">
+      <div class="output-card">
+        <div class="card-header">
+          <h3>Résumé généré</h3>
+          <div class="output-stats" *ngIf="summary">
+            <span class="stat">{{ getSummaryWordCount() }} mots</span>
+            <span class="stat reduction">{{ getReductionPercentage() }}% de réduction</span>
+          </div>
+        </div>
+
+        <!-- Summary Display -->
+        <div class="summary-display">
+          <div *ngIf="!summary && !isLoading" class="empty-state">
+            <div class="empty-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              </svg>
+            </div>
+            <h4>Votre résumé apparaîtra ici</h4>
+            <p>Ajoutez du texte et cliquez sur "Générer le résumé" pour commencer</p>
+          </div>
+
+          <div *ngIf="isLoading" class="loading-state">
+            <div class="loading-animation">
+              <div class="loading-dots">
+                <span></span><span></span><span></span>
+              </div>
+            </div>
+            <p>Analyse et résumé du texte en cours...</p>
+          </div>
+
+          <div *ngIf="summary && !isLoading" class="summary-content">
+            <div class="summary-text" [innerHTML]="formatSummary(summary)"></div>
+            
+            <!-- Keywords Section -->
+            <div class="keywords-section" *ngIf="keywords.length > 0">
+              <h5>Mots-clés principaux</h5>
+              <div class="keywords-list">
+                <span *ngFor="let keyword of keywords" class="keyword-tag">{{ keyword }}</span>
+              </div>
+            </div>
+
+            <!-- Reading Time -->
+            <div class="reading-time" *ngIf="summaryOptions.addReadingTime">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <span>Temps de lecture estimé : {{ getReadingTime() }} min</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Output Actions -->
+        <div class="output-actions" *ngIf="summary">
+          <button class="action-btn copy-btn" (click)="copySummary()">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+            </svg>
+            Copier
+          </button>
+          
+          <button class="action-btn download-btn" (click)="downloadSummary()">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            Télécharger
+          </button>
+          
+          <button class="action-btn share-btn" (click)="shareSummary()">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"/>
+            </svg>
+            Partager
+          </button>
+          
+          <button class="action-btn regenerate-btn" (click)="regenerateSummary()">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+            </svg>
+            Régénérer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Examples -->
+   <div class="examples-section" *ngIf="!inputText.trim()"> 
+    <!-- <div class="examples-card">
+      <h4>Exemples de textes à résumer</h4>
+      <div class="examples-grid">
+        <button *ngFor="let example of examples" 
+                class="example-btn"
+                (click)="loadExample(example)">
+          <div class="example-icon" [class]="example.iconClass">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="example.iconPath"/>
+            </svg>
+          </div>
+          <div class="example-content">
+            <h5>{{ example.title }}</h5>
+            <p>{{ example.description }}</p>
+          </div>
+        </button>
+      </div>
+    </div> -->
+  </div>
+</div>

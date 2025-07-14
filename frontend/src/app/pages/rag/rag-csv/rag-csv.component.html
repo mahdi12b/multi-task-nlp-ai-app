@@ -1,0 +1,114 @@
+<div class="rag-csv-container">
+  <!-- Header -->
+  <div class="rag-header">
+    <div class="header-content">
+      <h1>RAG - Analyse CSV</h1>
+      <p>Analysez vos fichiers CSV avec l'IA</p>
+    </div>
+  </div>
+
+  <div class="rag-content">
+    <!-- Upload Section -->
+    <div class="upload-section">
+      <div class="upload-card">
+        <h3>Télécharger vos fichiers CSV</h3>
+        
+        <div class="upload-area" 
+             [class.dragover]="isDragOver"
+             (dragover)="onDragOver($event)"
+             (dragleave)="onDragLeave($event)"
+             (drop)="onDrop($event)"
+             (click)="fileInput.click()">
+          <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+          </svg>
+          <h4>Glissez vos fichiers CSV ici</h4>
+          <p>ou cliquez pour sélectionner</p>
+          <span class="upload-hint">Formats supportés: CSV, TSV (Max 10MB)</span>
+        </div>
+        <input #fileInput type="file" accept=".csv,.tsv" multiple (change)="onFileSelect($event)" style="display: none;">
+
+        <!-- Files List -->
+        <div class="files-list" *ngIf="csvFiles.length > 0">
+          <h4>Fichiers chargés ({{ csvFiles.length }})</h4>
+          <div *ngFor="let file of csvFiles" class="file-item">
+            <div class="file-info">
+              <svg class="file-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              </svg>
+              <div class="file-details">
+                <span class="file-name">{{ file.name }}</span>
+                <span class="file-size">{{ file.size }}</span>
+              </div>
+            </div>
+            <button class="remove-btn" (click)="removeFile(file)">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Section -->
+    <div class="chat-section">
+      <div class="chat-card">
+        <div class="chat-header">
+          <h3>Posez vos questions</h3>
+          <div class="status-badge" [class.active]="csvFiles.length > 0">
+            {{ csvFiles.length > 0 ? 'Prêt' : 'En attente de fichiers' }}
+          </div>
+        </div>
+
+        <!-- Messages -->
+        <div class="chat-messages" #chatMessages>
+          <div *ngFor="let message of messages" class="message" [class]="message.type">
+            <div class="message-content">
+              <div class="message-text">{{ message.content }}</div>
+              <div class="message-time">{{ message.timestamp | date:'short' }}</div>
+            </div>
+          </div>
+          
+          <div *ngIf="isLoading" class="message assistant">
+            <div class="message-content loading">
+              <div class="typing-dots">
+                <span></span><span></span><span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Input -->
+        <div class="chat-input-container">
+          <div class="input-wrapper">
+            <textarea 
+              [(ngModel)]="currentMessage"
+              placeholder="Analysez mes données CSV, trouvez les tendances..."
+              class="chat-input"
+              rows="1"
+              [disabled]="csvFiles.length === 0"
+              (keydown)="onKeyDown($event)"></textarea>
+            <button 
+              class="send-btn" 
+              (click)="sendMessage()"
+              [disabled]="!currentMessage.trim() || csvFiles.length === 0 || isLoading">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+              </svg>
+            </button>
+          </div>
+          
+          <!-- Suggestions -->
+          <div class="suggestions" *ngIf="csvFiles.length > 0 && messages.length === 0">
+            <button *ngFor="let suggestion of suggestions" 
+                    class="suggestion-btn"
+                    (click)="selectSuggestion(suggestion)">
+              {{ suggestion }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

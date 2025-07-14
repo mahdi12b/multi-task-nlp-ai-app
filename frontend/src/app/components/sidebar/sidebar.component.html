@@ -1,11 +1,11 @@
 <aside class="sidebar" [class.collapsed]="isCollapsed">
-  <!-- Header du Sidebar -->
+  <!-- Sidebar Header -->
   <div class="sidebar-header">
     <div class="logo-section">
       <div class="logo">
         <span class="logo-text">AI</span>
       </div>
-      <h2 class="sidebar-title" *ngIf="!isCollapsed">Multi-IA</h2>
+      <h2 class="sidebar-title" *ngIf="!isCollapsed">Multi-AI</h2>
     </div>
     <button class="collapse-btn" (click)="toggleSidebar()">
       <svg class="collapse-icon" [class.rotated]="isCollapsed" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -19,133 +19,107 @@
     <ul class="nav-list">
       <li class="nav-item">
         <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" 
-           class="nav-link" [attr.title]="isCollapsed ? 'Accueil' : null">
+           class="nav-link" [attr.title]="isCollapsed ? 'Dashboard' : null">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
           </svg>
-          <span class="nav-text" *ngIf="!isCollapsed">Accueil</span>
+          <span class="nav-text" *ngIf="!isCollapsed">Dashboard</span>
         </a>
       </li>
-            <li class="nav-item">
+      <li class="nav-item">
         <a routerLink="/text-summarizer" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" 
-           class="nav-link" [attr.title]="isCollapsed ? 'Accueil' : null">
+           class="nav-link" [attr.title]="isCollapsed ? 'Text Summarization' : null">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
           </svg>
-          <span class="nav-text" *ngIf="!isCollapsed">text summarizer</span>
+          <span class="nav-text" *ngIf="!isCollapsed">Text Summarization</span>
         </a>
       </li>
-
       <li class="nav-item">
         <a routerLink="/chat" routerLinkActive="active" 
-           class="nav-link" [attr.title]="isCollapsed ? 'Chat IA' : null">
+           class="nav-link" [attr.title]="isCollapsed ? 'AI Chat' : null">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
           </svg>
-          <span class="nav-text" *ngIf="!isCollapsed">Chat IA</span>
+          <span class="nav-text" *ngIf="!isCollapsed">AI Chat</span>
         </a>
       </li>
-        <li class="nav-item">
+      <li class="nav-item">
         <a routerLink="/ner" routerLinkActive="active" 
-           class="nav-link" [attr.title]="isCollapsed ? 'Chat IA' : null">
+           class="nav-link" [attr.title]="isCollapsed ? 'Entity Recognition' : null">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
           </svg>
-          <span class="nav-text" *ngIf="!isCollapsed">NER</span>
+          <span class="nav-text" *ngIf="!isCollapsed">Entity Recognition</span>
         </a>
       </li>
       <li class="nav-item nav-category">
-  <div class="category-header" (click)="isRagOpen = !isRagOpen">
-    <svg class="category-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M3 12h18M3 17h18"/>
-    </svg>
-    <span class="category-text">RAG</span>
-    <div class="expand-icon">
-      <svg [ngClass]="{'rotate-90': isRagOpen}" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M6 8l4 4 4-4" clip-rule="evenodd" />
-      </svg>
-    </div>
-  </div>
-
-  <div class="subcategory-list" *ngIf="isRagOpen">
-    <a routerLink="rag/rag-csv" routerLinkActive="active" class="subcategory-item">
-      <span class="subcategory-dot"></span>
-      With CSV Files
-    </a>
-    <a routerLink="rag/rag-db" routerLinkActive="active" class="subcategory-item">
-      <span class="subcategory-dot"></span>
-      With Database
-    </a>
-    <a routerLink="rag/rag-web" routerLinkActive="active" class="subcategory-item">
-      <span class="subcategory-dot"></span>
-      With Web Links
-    </a>
-  </div>
-</li>
-
-
-      <!-- <li class="nav-item">
-        <a routerLink="/image-generator" routerLinkActive="active" 
-           class="nav-link" [attr.title]="isCollapsed ? 'Générateur d\'Images' : null">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+        <div class="category-header" (click)="isRagOpen = !isRagOpen">
+          <svg class="category-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M12 12h.01M16 12h.01"/>
           </svg>
-          <span class="nav-text" *ngIf="!isCollapsed">Images</span>
-        </a>
-      </li> -->
-
+          <span class="category-text">Retrieval-Augmented Generation</span>
+          <div class="expand-icon">
+            <svg [ngClass]="{'rotate-90': isRagOpen}" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M6 8l4 4 4-4" clip-rule="evenodd" />
+            </svg>
+          </div>
+        </div>
+        <div class="subcategory-list" *ngIf="isRagOpen">
+          <a routerLink="rag/rag-csv" routerLinkActive="active" class="subcategory-item">
+            <span class="subcategory-dot"></span>
+            Using CSV Data
+          </a>
+          <a routerLink="rag/rag-db" routerLinkActive="active" class="subcategory-item">
+            <span class="subcategory-dot"></span>
+            Using Database
+          </a>
+          <a routerLink="rag/rag-web" routerLinkActive="active" class="subcategory-item">
+            <span class="subcategory-dot"></span>
+            Using Web Sources
+          </a>
+        </div>
+      </li>
       <li class="nav-item">
         <a routerLink="/text-analysis" routerLinkActive="active" 
-           class="nav-link" [attr.title]="isCollapsed ? 'Analyse de Texte' : null">
+           class="nav-link" [attr.title]="isCollapsed ? 'Text Analysis' : null">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 12h3m-3-4h3"/>
           </svg>
-          <span class="nav-text" *ngIf="!isCollapsed">Text Classification</span>
+          <span class="nav-text" *ngIf="!isCollapsed">Text Analysis</span>
         </a>
       </li>
-
-      <!-- <li class="nav-item">
-        <a routerLink="/voice-assistant" routerLinkActive="active" 
-           class="nav-link" [attr.title]="isCollapsed ? 'Assistant Vocal' : null">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
-          </svg>
-          <span class="nav-text" *ngIf="!isCollapsed">Voix</span>
-        </a>
-      </li> -->
-
       <li class="nav-item">
         <a routerLink="/history" routerLinkActive="active" 
-           class="nav-link" [attr.title]="isCollapsed ? 'Historique' : null">
+           class="nav-link" [attr.title]="isCollapsed ? 'History' : null">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l2 2m8-4a9 9 0 11-18 0 9 9 0 0118 0z"/>
           </svg>
-          <span class="nav-text" *ngIf="!isCollapsed">Historique</span>
+          <span class="nav-text" *ngIf="!isCollapsed">History</span>
         </a>
       </li>
-
       <li class="nav-item">
         <a routerLink="/settings" routerLinkActive="active" 
-           class="nav-link" [attr.title]="isCollapsed ? 'Paramètres' : null">
+           class="nav-link" [attr.title]="isCollapsed ? 'Settings' : null">
           <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
           </svg>
-          <span class="nav-text" *ngIf="!isCollapsed">Paramètres</span>
+          <span class="nav-text" *ngIf="!isCollapsed">Settings</span>
         </a>
       </li>
     </ul>
   </nav>
 
-  <!-- Footer du Sidebar -->
+  <!-- Sidebar Footer -->
   <div class="sidebar-footer">
     <div class="user-profile">
       <div class="user-avatar">
         <span class="avatar-text">U</span>
       </div>
       <div class="user-info" *ngIf="!isCollapsed">
-        <span class="user-name">Utilisateur</span>
-        <span class="user-status">En ligne</span>
+        <span class="user-name">User</span>
+        <span class="user-status">Online</span>
       </div>
     </div>
   </div>

@@ -3,9 +3,9 @@
   <div class="sidebar-header">
     <div class="logo-section">
       <div class="logo">
-        <span class="logo-text">AI</span>
+        <span class="logo-text">NLP Hub</span>
       </div>
-      <h2 class="sidebar-title" *ngIf="!isCollapsed">Multi-AI</h2>
+      <!-- <h2 class="sidebar-title" *ngIf="!isCollapsed">Multi-AI</h2> -->
     </div>
     <button class="collapse-btn" (click)="toggleSidebar()">
       <svg class="collapse-icon" [class.rotated]="isCollapsed" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -26,6 +26,15 @@
           <span class="nav-text" *ngIf="!isCollapsed">Dashboard</span>
         </a>
       </li>
+        <li class="nav-item">
+        <a routerLink="/chat" routerLinkActive="active" 
+           class="nav-link" [attr.title]="isCollapsed ? 'AI Chat' : null">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span class="nav-text" *ngIf="!isCollapsed">AI Chat</span>
+        </a>
+      </li>
       <li class="nav-item">
         <a routerLink="/text-summarizer" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" 
            class="nav-link" [attr.title]="isCollapsed ? 'Text Summarization' : null">
@@ -35,15 +44,7 @@
           <span class="nav-text" *ngIf="!isCollapsed">Text Summarization</span>
         </a>
       </li>
-      <li class="nav-item">
-        <a routerLink="/chat" routerLinkActive="active" 
-           class="nav-link" [attr.title]="isCollapsed ? 'AI Chat' : null">
-          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
-          <span class="nav-text" *ngIf="!isCollapsed">AI Chat</span>
-        </a>
-      </li>
+    
       <li class="nav-item">
         <a routerLink="/ner" routerLinkActive="active" 
            class="nav-link" [attr.title]="isCollapsed ? 'Entity Recognition' : null">

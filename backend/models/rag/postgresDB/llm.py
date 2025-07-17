@@ -10,9 +10,9 @@ llm = LlamaCpp(
     temperature=0.1,
     max_tokens=512,
     top_p=0.95,
-    n_gpu_layers=35,        # RTX 3050 - ajuste si nécessaire
+    n_gpu_layers=35,       
     n_batch=128,
-    n_ctx=2048,             # pour contexte long
+    n_ctx=2048,            
     verbose=True)
 
 # 2. Connexion à la base de données PostgreSQL

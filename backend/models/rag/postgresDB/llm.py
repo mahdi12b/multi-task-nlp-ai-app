@@ -115,4 +115,3 @@ Answer: {formatted_result['answer']}
         print(error_message)
         return {"error": error_message}
 
-# Exemple d'exécution
